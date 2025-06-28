@@ -1,0 +1,296 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Brand {
+  id             String     @id @default(cuid())
+  name           String     @unique
+  slug           String     @unique
+  logo           String?
+  description    String?
+  websiteUrl     String?
+  tags           String[]
+  locations      String[]
+  isOnline       Boolean    @default(true)
+  socialLinks    Json?
+  featured       Boolean    @default(false)
+  awards         String[]
+  productGallery String[]
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+  products       Product[]
+  categories     Category[] @relation("BrandCategories")
+
+  @@map("brands")
+}
+
+model Category {
+  id               String     @id @default(cuid())
+  name             String
+  slug             String     @unique
+  description      String?
+  parentCategoryId String?
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+  parentCategory   Category?  @relation("CategoryHierarchy", fields: [parentCategoryId], references: [id])
+  subCategories    Category[] @relation("CategoryHierarchy")
+  brands           Brand[]    @relation("BrandCategories")
+  products         Product[]  @relation("ProductCategories")
+
+  @@map("categories")
+}
+
+model Product {
+  id          String     @id @default(cuid())
+  name        String
+  slug        String     @unique
+  brandId     String
+  description String?
+  images      String[]
+  price       Float?
+  rating      Float?     @default(0)
+  reviewCount Int        @default(0)
+  features    String[]
+  url         String?
+  tags        String[]
+  isActive    Boolean    @default(true)
+  isFeatured  Boolean    @default(false)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  brand       Brand      @relation(fields: [brandId], references: [id])
+  reviews     Review[]
+  categories  Category[] @relation("ProductCategories")
+
+  @@map("products")
+}
+
+model TherapyService {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  serviceType String
+  location    String
+  description String?
+  images      String[]
+  priceRange  String?
+  rating      Float?   @default(0)
+  reviewCount Int      @default(0)
+  features    String[]
+  bookingUrl  String?
+  websiteUrl  String?
+  phone       String?
+  email       String?
+  tags        String[]
+  isActive    Boolean  @default(true)
+  isFeatured  Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  reviews     Review[]
+
+  @@map("therapy_services")
+}
+
+model App {
+  id                String   @id @default(cuid())
+  name              String
+  slug              String   @unique
+  platforms         String[]
+  downloadUrl       String?
+  subscriptionModel String?
+  description       String?
+  rating            Float?   @default(0)
+  reviewCount       Int      @default(0)
+  screenshots       String[]
+  features          String[]
+  tags              String[]
+  isActive          Boolean  @default(true)
+  isFeatured        Boolean  @default(false)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  reviews           Review[]
+
+  @@map("apps")
+}
+
+model BlogCategory {
+  id          String     @id @default(cuid())
+  name        String
+  slug        String     @unique
+  description String?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  posts       BlogPost[] @relation("BlogPostCategories")
+
+  @@map("blog_categories")
+}
+
+model BlogTag {
+  id        String     @id @default(cuid())
+  name      String
+  slug      String     @unique
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  posts     BlogPost[] @relation("BlogPostTags")
+
+  @@map("blog_tags")
+}
+
+model BlogPost {
+  id            String         @id @default(cuid())
+  title         String
+  slug          String         @unique
+  body          String
+  excerpt       String?
+  authorId      String
+  featuredImage String?
+  publishedAt   DateTime?
+  status        PostStatus     @default(DRAFT)
+  viewCount     Int            @default(0)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  author        User           @relation(fields: [authorId], references: [id])
+  categories    BlogCategory[] @relation("BlogPostCategories")
+  tags          BlogTag[]      @relation("BlogPostTags")
+
+  @@map("blog_posts")
+}
+
+model ForumCategory {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  description String?
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  threads     Thread[]
+
+  @@map("forum_categories")
+}
+
+model Thread {
+  id              String        @id @default(cuid())
+  title           String
+  slug            String        @unique
+  forumCategoryId String
+  authorId        String
+  isPinned        Boolean       @default(false)
+  isLocked        Boolean       @default(false)
+  viewCount       Int           @default(0)
+  lastActivityAt  DateTime      @default(now())
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  posts           ForumPost[]
+  author          User          @relation(fields: [authorId], references: [id])
+  forumCategory   ForumCategory @relation(fields: [forumCategoryId], references: [id])
+
+  @@map("threads")
+}
+
+model ForumPost {
+  id        String    @id @default(cuid())
+  threadId  String
+  authorId  String
+  body      String
+  editedAt  DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  author    User      @relation(fields: [authorId], references: [id])
+  thread    Thread    @relation(fields: [threadId], references: [id])
+  likes     Like[]
+
+  @@map("forum_posts")
+}
+
+model Like {
+  id          String    @id @default(cuid())
+  userId      String
+  forumPostId String
+  createdAt   DateTime  @default(now())
+  forumPost   ForumPost @relation(fields: [forumPostId], references: [id])
+  user        User      @relation(fields: [userId], references: [id])
+
+  @@unique([userId, forumPostId])
+  @@map("likes")
+}
+
+model User {
+  id           String      @id @default(cuid())
+  email        String      @unique
+  username     String?     @unique
+  name         String?
+  avatarUrl    String?
+  bio          String?
+  roles        UserRole[]  @default([USER])
+  reputation   Int         @default(0)
+  joinedAt     DateTime    @default(now())
+  lastActiveAt DateTime    @default(now())
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  blogPosts    BlogPost[]
+  forumPosts   ForumPost[]
+  likes        Like[]
+  reviews      Review[]
+  threads      Thread[]
+  badges       Badge[]     @relation("BadgeToUser")
+
+  @@map("users")
+}
+
+model Badge {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  icon        String?
+  createdAt   DateTime @default(now())
+  users       User[]   @relation("BadgeToUser")
+
+  @@map("badges")
+}
+
+model Review {
+  id               String          @id @default(cuid())
+  rating           Int
+  title            String?
+  content          String?
+  authorId         String
+  productId        String?
+  therapyServiceId String?
+  appId            String?
+  isVerified       Boolean         @default(false)
+  isApproved       Boolean         @default(false)
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  app              App?            @relation(fields: [appId], references: [id])
+  author           User            @relation(fields: [authorId], references: [id])
+  product          Product?        @relation(fields: [productId], references: [id])
+  therapyService   TherapyService? @relation(fields: [therapyServiceId], references: [id])
+
+  @@map("reviews")
+}
+
+model NewsletterSubscriber {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  isActive     Boolean  @default(true)
+  subscribedAt DateTime @default(now())
+
+  @@map("newsletter_subscribers")
+}
+
+enum PostStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum UserRole {
+  USER
+  MODERATOR
+  ADMIN
+}

@@ -1,0 +1,67 @@
+export const categoryData = {
+  mattresses: {
+    title: "Mattresses",
+    tagline: "Sleep Deeper, Wake Happier",
+    intro: `A good night's sleep starts with the right <b>mattress</b>. Whether you're a side sleeper, back sleeper, or someone who tosses and turns, finding the best mattress for your needs can dramatically improve your sleep quality and overall health. On simplesleepsolutions.co.uk, we help you discover the top mattresses in the UK, from memory foam to pocket-spring, so you can buy with confidence and wake up refreshed.`,
+    benefits: [
+      "<b>Back pain relief:</b> The right mattress supports spinal alignment, reducing aches and pains.",
+      "<b>Temperature regulation:</b> Modern mattresses use cooling gels and breathable materials to prevent overheating.",
+      "<b>Motion isolation:</b> Couples benefit from mattresses that absorb movement, so you're not disturbed by a restless partner.",
+      "<b>Allergy reduction:</b> Hypoallergenic materials help keep dust mites and allergens at bay.",
+      "<b>Custom comfort:</b> With options for firmness, size, and material, you can find a mattress tailored to your unique sleep style.",
+    ],
+    subNiches: [
+      { title: "Memory Foam Mattresses", description: "Memory foam mattresses contour to your body, providing pressure relief and excellent support. They're ideal for those who want to minimize motion transfer and enjoy a 'hugging' feel." },
+      { title: "Pocket-Spring Mattresses", description: "Pocket-spring mattresses feature individually wrapped coils for zoned support and superior motion isolation. They're great for couples and those who prefer a more traditional, bouncy feel." },
+      { title: "Natural Latex Mattresses", description: "Natural latex mattresses are durable, eco-friendly, and hypoallergenic. They offer responsive support and are naturally resistant to dust mites and mold." },
+      { title: "Hybrid Mattresses", description: "Hybrid mattresses combine springs and foam (or latex) for the best of both worlds—support, bounce, and contouring comfort." },
+      { title: "Orthopedic Mattresses", description: "Designed for those with back or joint pain, orthopedic mattresses provide extra support and promote healthy spinal alignment." },
+      { title: "Budget Mattresses", description: "Affordable options that don't compromise on comfort or quality, perfect for guest rooms or students." },
+    ],
+    tips: [
+      "Check firmness rating: Choose a firmness level that matches your sleep position and comfort preference.",
+      "Look for trial periods: Many brands offer risk-free trials so you can test the mattress at home.",
+      "Read third-party reviews: See what real users say about comfort, durability, and customer service.",
+      "Consider materials: Decide between memory foam, latex, springs, or hybrids based on your needs.",
+      "Assess motion isolation: If you share a bed, look for mattresses that minimize partner disturbance.",
+      "Check for certifications: Look for CertiPUR, OEKO-TEX, or other safety and quality certifications.",
+      "Compare warranties: A longer warranty often signals better durability and brand confidence.",
+    ],
+    science: [
+      "Modern <b>mattresses</b> are engineered using advanced materials and sleep science. Memory foam, developed by NASA, adapts to your body's shape, reducing pressure points and improving circulation.",
+      "Latex, derived from natural rubber trees, is both supportive and hypoallergenic, making it ideal for allergy sufferers.",
+      "Pocket-spring systems use individually wrapped coils to provide targeted support and reduce motion transfer.",
+      "Clinical studies show that the right mattress can improve sleep quality, reduce pain, and even boost mental health. Experts recommend replacing your mattress every 7–10 years to maintain optimal support and hygiene. For more on sleep science, see our <a href='/guides/sleep-science'>Sleep Science Guide</a>.",
+    ],
+    products: [
+      { name: "Emma Original Mattress", usp: "Award-winning comfort and support for all sleep styles.", link: "#" },
+      { name: "Simba Hybrid Mattress", usp: "Innovative hybrid design with cooling technology.", link: "#" },
+      { name: "Silentnight Eco Comfort", usp: "Sustainable materials and excellent value.", link: "#" },
+      { name: "Tempur Sensation Elite", usp: "Premium memory foam for pressure relief.", link: "#" },
+      { name: "Dormeo Memory Plus", usp: "Affordable memory foam with great reviews.", link: "#" },
+      { name: "Eve Premium Hybrid", usp: "Luxurious feel with advanced support layers.", link: "#" },
+    ],
+    faq: [
+      { q: "What is the best mattress for side sleepers?", a: "Memory foam and hybrid mattresses with medium firmness are often best for side sleepers, providing pressure relief for shoulders and hips." },
+      { q: "How often should I replace my mattress?", a: "Most experts recommend replacing your mattress every 7–10 years, or sooner if you notice sagging or discomfort." },
+      { q: "Are memory foam mattresses hot to sleep on?", a: "Many modern memory foam mattresses use cooling gels or breathable covers to prevent overheating." },
+      { q: "Can I try a mattress before buying?", a: "Many brands offer risk-free home trials, so you can test the mattress and return it if it's not right for you." },
+      { q: "What size mattress should I get?", a: "Choose a size that fits your room and sleeping needs—single, double, king, or super king." },
+      { q: "Are there mattresses for allergies?", a: "Yes, latex and hypoallergenic mattresses are ideal for allergy sufferers." },
+      { q: "Where can I read mattress reviews?", a: "See our <a href='/reviews/mattresses'>Mattress Reviews</a> page for in-depth, unbiased reviews." },
+    ],
+    cta: {
+      text: "Ready to find your perfect mattress?",
+      links: [
+        { label: "Shop Mattresses", href: "/mattresses" },
+        { label: "Compare Mattress Types", href: "/mattresses#types" },
+        { label: "Contact a Sleep Expert", href: "/contact" },
+      ],
+    },
+    related: [
+      { text: "Sleep Masks & Eye Covers", href: "/sleep-masks" },
+      { text: "Bedding Sets & Duvets", href: "/bedding" },
+      { text: "Sleep Support Supplements", href: "/supplements" },
+    ],
+  },
+}; 

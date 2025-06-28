@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<brand-data-schema version="1.0">
+  <metadata>
+    <title>Sleep Directory Brand Data Collection Schema</title>
+    <description>Comprehensive schema for collecting brand and product data across sleep categories</description>
+    <target_entries>1000</target_entries>
+    <primary_country>UK</primary_country>
+    <collection_method>GPT-assisted web scraping and manual research</collection_method>
+    <last_updated>2024-01-15</last_updated>
+  </metadata>
+
+  <field-definitions>
+    <!-- Core Brand Information -->
+    <field name="brand_name" type="text" required="true" max_length="100">
+      <description>Official brand name as it appears on website</description>
+      <examples>Emma Sleep, Simba Sleep, Eve Sleep</examples>
+    </field>
+    
+    <field name="brand_slug" type="slug" required="true" unique="true" max_length="50">
+      <description>URL-friendly version of brand name (lowercase, hyphens)</description>
+      <examples>emma-sleep, simba-sleep, eve-sleep</examples>
+    </field>
+    
+    <field name="brand_website" type="url" required="true">
+      <description>Primary brand website URL</description>
+      <validation>Must be valid URL starting with https://</validation>
+    </field>
+    
+    <field name="brand_description" type="text" required="true" max_length="500">
+      <description>Brief description of what the brand offers</description>
+    </field>
+    
+    <field name="brand_logo_url" type="url" required="false">
+      <description>Direct URL to brand logo image</description>
+      <note>Leave blank if not available - can be added later</note>
+    </field>
+    
+    <!-- Geographic Information -->
+    <field name="brand_country" type="select" required="true">
+      <description>Primary country where brand operates</description>
+      <options>UK, US, CA, AU, DE, FR, Other</options>
+    </field>
+    
+    <!-- Category Classification -->
+    <field name="primary_category" type="select" required="true">
+      <description>Main category this brand entry focuses on</description>
+      <options>
+        <option value="mattresses">Mattresses</option>
+        <option value="pillows">Pillows</option>
+        <option value="beds">Beds</option>
+        <option value="bedding">Bedding</option>
+        <option value="bedroom-decor">Bedroom Decor</option>
+        <option value="supplements">Supplements</option>
+        <option value="air-quality">Air Quality</option>
+        <option value="mattress-toppers">Mattress Toppers</option>
+        <option value="sleep-aids">Sleep Aids</option>
+        <option value="sleep-masks">Sleep Masks</option>
+        <option value="sleep-tracking">Sleep Tracking</option>
+        <option value="sleepwear">Sleepwear</option>
+        <option value="travel-sleep">Travel Sleep</option>
+      </options>
+    </field>
+    
+    <field name="primary_subniche" type="select" required="true">
+      <description>Specific subniche for this brand entry</description>
+      <note>Use existing subniches from Sanity CMS or propose new ones</note>
+      <examples>memory-foam-mattresses, orthopedic-pillows, sleep-masks</examples>
+    </field>
+    
+    <!-- Subniche-Specific Content -->
+    <field name="subniche_specific_url" type="url" required="true">
+      <description>Direct URL to page targeting this specific subniche</description>
+      <examples>https://brand.com/memory-foam-mattresses, https://brand.com/pillows/neck-pain</examples>
+    </field>
+    
+    <field name="subniche_specific_title" type="text" required="true" max_length="200">
+      <description>Title of the specific product/page for this subniche</description>
+    </field>
+    
+    <field name="subniche_specific_description" type="text" required="true" max_length="500">
+      <description>Description of how this brand addresses this specific subniche</description>
+    </field>
+    
+    <!-- Pricing Information -->
+    <field name="price_range_min" type="number" required="false">
+      <description>Minimum price for products in this subniche</description>
+    </field>
+    
+    <field name="price_range_max" type="number" required="false">
+      <description>Maximum price for products in this subniche</description>
+    </field>
+    
+    <field name="currency" type="select" required="true">
+      <description>Currency for pricing</description>
+      <options>GBP, USD, CAD, AUD, EUR</options>
+    </field>
+    
+    <!-- Business Information -->
+    <field name="shipping_info" type="text" required="false" max_length="200">
+      <description>Shipping policies and delivery information</description>
+    </field>
+    
+    <field name="return_policy" type="text" required="false" max_length="200">
+      <description>Return and refund policies</description>
+    </field>
+    
+    <field name="warranty_info" type="text" required="false" max_length="200">
+      <description>Warranty and guarantee information</description>
+    </field>
+    
+    <field name="established_year" type="number" required="false">
+      <description>Year the brand was founded</description>
+      <validation>Must be between 1800 and current year</validation>
+    </field>
+    
+    <field name="headquarters_location" type="text" required="false" max_length="100">
+      <description>City and country of headquarters</description>
+    </field>
+    
+    <field name="brand_type" type="select" required="false">
+      <description>Type of business model</description>
+      <options>direct-to-consumer, retail, marketplace, manufacturer, distributor</options>
+    </field>
+    
+    <!-- Reviews and Ratings -->
+    <field name="customer_rating" type="decimal" required="false">
+      <description>Average customer rating (0-5 scale)</description>
+      <validation>Must be between 0 and 5</validation>
+    </field>
+    
+    <field name="review_count" type="number" required="false">
+      <description>Total number of customer reviews</description>
+    </field>
+    
+    <!-- Social Media -->
+    <field name="social_media_facebook" type="url" required="false">
+      <description>Facebook page URL</description>
+    </field>
+    
+    <field name="social_media_instagram" type="url" required="false">
+      <description>Instagram profile URL</description>
+    </field>
+    
+    <field name="social_media_twitter" type="url" required="false">
+      <description>Twitter profile URL</description>
+    </field>
+    
+    <!-- Product Details -->
+    <field name="key_features" type="text" required="false" max_length="300">
+      <description>Key features or selling points (comma-separated)</description>
+    </field>
+    
+    <field name="target_audience" type="text" required="false" max_length="200">
+      <description>Primary target audience for this product</description>
+    </field>
+    
+    <field name="materials_used" type="text" required="false" max_length="200">
+      <description>Primary materials or components used</description>
+    </field>
+    
+    <field name="certifications" type="text" required="false" max_length="200">
+      <description>Quality certifications or standards (comma-separated)</description>
+    </field>
+    
+    <field name="awards" type="text" required="false" max_length="200">
+      <description>Industry awards or recognition received</description>
+    </field>
+    
+    <field name="sustainability_notes" type="text" required="false" max_length="200">
+      <description>Environmental or sustainability initiatives</description>
+    </field>
+    
+    <!-- Contact Information -->
+    <field name="customer_support_phone" type="text" required="false" max_length="20">
+      <description>Customer support phone number</description>
+    </field>
+    
+    <field name="customer_support_email" type="email" required="false">
+      <description>Customer support email address</description>
+    </field>
+    
+    <!-- Marketplace Presence -->
+    <field name="marketplace_amazon_uk" type="url" required="false">
+      <description>Amazon UK store or product page URL</description>
+    </field>
+    
+    <field name="marketplace_ebay_uk" type="url" required="false">
+      <description>eBay UK store or product page URL</description>
+    </field>
+    
+    <field name="marketplace_direct_sales" type="select" required="false">
+      <description>Does brand sell directly to consumers?</description>
+      <options>Yes, No, Partial</options>
+    </field>
+    
+    <!-- Marketing Information -->
+    <field name="special_offers" type="text" required="false" max_length="200">
+      <description>Current promotions or discount codes</description>
+    </field>
+    
+    <field name="brand_story" type="text" required="false" max_length="300">
+      <description>Brief brand story or founding narrative</description>
+    </field>
+    
+    <field name="unique_selling_points" type="text" required="false" max_length="300">
+      <description>What makes this brand unique in the market</description>
+    </field>
+    
+    <field name="competitor_comparison" type="text" required="false" max_length="200">
+      <description>How this brand compares to main competitors</description>
+    </field>
+    
+    <!-- SEO Information -->
+    <field name="search_keywords" type="text" required="false" max_length="300">
+      <description>Primary keywords this brand ranks for (comma-separated)</description>
+    </field>
+    
+    <field name="meta_title" type="text" required="false" max_length="60">
+      <description>SEO-optimized page title for this brand/subniche combination</description>
+    </field>
+    
+    <field name="meta_description" type="text" required="false" max_length="160">
+      <description>SEO-optimized meta description</description>
+    </field>
+    
+    <!-- Data Collection Metadata -->
+    <field name="data_collection_date" type="date" required="true">
+      <description>Date when this data was collected (YYYY-MM-DD)</description>
+    </field>
+    
+    <field name="data_collector" type="text" required="true" max_length="50">
+      <description>ID or name of person/system that collected this data</description>
+    </field>
+    
+    <field name="verification_status" type="select" required="true">
+      <description>Verification status of the collected data</description>
+      <options>verified, pending, needs-review, draft</options>
+    </field>
+    
+    <field name="notes" type="text" required="false" max_length="500">
+      <description>Additional notes or observations about this brand entry</description>
+    </field>
+  </field-definitions>
+
+  <collection-guidelines>
+    <guideline>Focus on UK-based brands or brands with strong UK presence</guideline>
+    <guideline>Prioritize brands that appear in top 10 Google search results for subniche queries</guideline>
+    <guideline>Collect one entry per brand per subniche (brands can have multiple entries for different subniches)</guideline>
+    <guideline>Verify pricing and availability on brand websites</guideline>
+    <guideline>Check for current promotions and discount codes</guideline>
+    <guideline>Look for customer reviews on multiple platforms (brand site, Amazon, Trustpilot)</guideline>
+    <guideline>Note any seasonal availability or stock issues</guideline>
+    <guideline>Record both direct brand URLs and marketplace presence</guideline>
+  </collection-guidelines>
+
+  <quality-checks>
+    <check>All required fields must be completed</check>
+    <check>URLs must be valid and accessible</check>
+    <check>Price ranges should be realistic for the category</check>
+    <check>Brand information should be current (within 30 days)</check>
+    <check>Subniche classification should match existing categories</check>
+    <check>No duplicate brand-subniche combinations</check>
+  </quality-checks>
+
+  <sample-search-queries>
+    <!-- Use these queries to find brands for each subniche -->
+    <query category="mattresses" subniche="memory-foam-mattresses">memory foam mattress UK brands</query>
+    <query category="mattresses" subniche="orthopedic-mattresses">orthopedic mattress UK suppliers</query>
+    <query category="pillows" subniche="memory-foam-pillows">best memory foam pillows UK</query>
+    <query category="pillows" subniche="orthopedic-pillows">pillows for neck pain UK</query>
+    <query category="sleep-aids" subniche="white-noise-machines">white noise machine UK brands</query>
+    <query category="supplements" subniche="melatonin">melatonin supplements UK brands</query>
+    <!-- Add more as needed for systematic collection -->
+  </sample-search-queries>
+</brand-data-schema> 
