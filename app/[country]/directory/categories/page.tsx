@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation'
 import { CategoryGrid } from '@/components/category-grid'
-import { client } from '@/sanity/lib/client'
+
+export const dynamic = "force-dynamic"
 
 // Define supported countries
 const SUPPORTED_COUNTRIES = {
@@ -76,23 +77,44 @@ export async function generateMetadata({ params }: PageProps) {
   }
 }
 
-export default async function CountryCategoriesPage({ params }: PageProps) {
+export default function CountryCategoriesPage({ params }: PageProps) {
   const countryData = SUPPORTED_COUNTRIES[params.country as CountryCode]
   
   if (!countryData) {
     notFound()
   }
 
-  // Fetch categories from Sanity
-  const categories = await client.fetch(`
-    *[_type == "category"] | order(order asc, title asc) {
-      _id,
-      title,
-      slug,
-      description,
-      "subNicheCount": count(*[_type == "subNiche" && references(^._id)])
+  // Static categories data for launch
+  const categories = [
+    {
+      _id: '1',
+      title: 'Mattresses',
+      slug: { current: 'mattresses' },
+      description: 'Memory foam, hybrid, and specialty mattresses for all sleep types',
+      subNicheCount: 8
+    },
+    {
+      _id: '2', 
+      title: 'Pillows',
+      slug: { current: 'pillows' },
+      description: 'Ergonomic pillows for side, back, and stomach sleepers',
+      subNicheCount: 5
+    },
+    {
+      _id: '3',
+      title: 'Beds & Frames',
+      slug: { current: 'beds' },
+      description: 'Platform beds, adjustable frames, and storage solutions',
+      subNicheCount: 4
+    },
+    {
+      _id: '4',
+      title: 'Sleep Accessories',
+      slug: { current: 'sleep-accessories' },
+      description: 'Masks, white noise machines, and sleep tracking devices',
+      subNicheCount: 6
     }
-  `)
+  ]
 
   return (
     <div className="container mx-auto px-4 py-8">
