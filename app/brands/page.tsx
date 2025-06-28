@@ -1,3 +1,7 @@
+"use client"
+
+export const dynamic = "force-dynamic"
+
 import { prisma } from "@/lib/db";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
