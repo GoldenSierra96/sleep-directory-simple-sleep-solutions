@@ -1,35 +1,23 @@
-import { prisma } from "@/lib/db";
 import { notFound } from "next/navigation";
 import { TabbedLayout, TabConfig } from "@/components/ui/tabbed-navigation";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ExternalLink } from "lucide-react";
+import { mockBrands } from "@/lib/mock-data";
 
 interface BrandLayoutProps {
   children: React.ReactNode;
   params: { slug: string };
 }
 
-async function getBrand(slug: string) {
-  const brand = await prisma.brand.findUnique({
-    where: { slug },
-    include: { 
-      categories: true,
-      _count: {
-        select: {
-          // Add these counts when you have the relations set up
-          // products: true,
-          // reviews: true,
-        }
-      }
-    },
-  });
+function getBrand(slug: string) {
+  const brand = mockBrands.find(b => b.slug === slug);
   return brand;
 }
 
-export default async function BrandLayout({ children, params }: BrandLayoutProps) {
-  const brand = await getBrand(params.slug);
+export default function BrandLayout({ children, params }: BrandLayoutProps) {
+  const brand = getBrand(params.slug);
 
   if (!brand) {
     notFound();
@@ -48,19 +36,19 @@ export default async function BrandLayout({ children, params }: BrandLayoutProps
       key: "products",
       label: "Products",
       href: `${basePath}/products`,
-      // count: brand._count.products, // Uncomment when relation exists
+      count: 12, // Mock count for products
     },
     {
       key: "reviews",
       label: "Reviews",
       href: `${basePath}/reviews`,
-      // count: brand._count.reviews, // Uncomment when relation exists
+      count: 284, // Mock count for reviews
     },
     {
       key: "stores",
       label: "Store Locations",
       href: `${basePath}/stores`,
-      count: brand.locations?.length || 0,
+      count: brand.isOnline ? 1 : 15, // Mock count for stores
     },
     {
       key: "about",
@@ -84,7 +72,7 @@ export default async function BrandLayout({ children, params }: BrandLayoutProps
             <Badge variant="outline">{brand.isOnline ? "Online" : "Physical"}</Badge>
           </div>
           <div className="flex flex-wrap gap-1">
-            {brand.categories.slice(0, 3).map((cat) => (
+            {brand.categories?.slice(0, 3).map((cat) => (
               <Badge key={cat.id} variant="secondary" className="text-xs">
                 {cat.name}
               </Badge>

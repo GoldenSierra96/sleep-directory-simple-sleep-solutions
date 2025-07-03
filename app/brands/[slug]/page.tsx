@@ -1,14 +1,11 @@
-import { prisma } from "@/lib/db";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { mockBrands } from "@/lib/mock-data";
 
-export default async function BrandOverviewPage({ params }: { params: { slug: string } }) {
-  const brand = await prisma.brand.findUnique({
-    where: { slug: params.slug },
-    include: { categories: true },
-  });
+export default function BrandOverviewPage({ params }: { params: { slug: string } }) {
+  const brand = mockBrands.find(b => b.slug === params.slug);
   
   if (!brand) notFound();
 
@@ -53,27 +50,27 @@ export default async function BrandOverviewPage({ params }: { params: { slug: st
               </CardHeader>
               <CardContent>
                 <div className="flex flex-wrap gap-3">
-                  {(brand.socialLinks as any)?.instagram && (
+                  {brand.socialLinks.instagram && (
                     <Link 
-                      href={(brand.socialLinks as any).instagram} 
+                      href={brand.socialLinks.instagram} 
                       target="_blank" 
                       className="flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg hover:opacity-90 transition-opacity"
                     >
                       Instagram
                     </Link>
                   )}
-                  {(brand.socialLinks as any)?.facebook && (
+                  {brand.socialLinks.facebook && (
                     <Link 
-                      href={(brand.socialLinks as any).facebook} 
+                      href={brand.socialLinks.facebook} 
                       target="_blank" 
                       className="flex items-center gap-2 px-3 py-2 bg-blue-600 text-white rounded-lg hover:opacity-90 transition-opacity"
                     >
                       Facebook
                     </Link>
                   )}
-                  {(brand.socialLinks as any)?.tiktok && (
+                  {brand.socialLinks.tiktok && (
                     <Link 
-                      href={(brand.socialLinks as any).tiktok} 
+                      href={brand.socialLinks.tiktok} 
                       target="_blank" 
                       className="flex items-center gap-2 px-3 py-2 bg-black text-white rounded-lg hover:opacity-90 transition-opacity"
                     >
@@ -100,7 +97,7 @@ export default async function BrandOverviewPage({ params }: { params: { slug: st
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Categories</span>
-                <span className="font-medium">{brand.categories.length}</span>
+                <span className="font-medium">{brand.categories?.length || 0}</span>
               </div>
               {brand.locations && brand.locations.length > 0 && (
                 <div className="flex justify-between">
@@ -147,24 +144,26 @@ export default async function BrandOverviewPage({ params }: { params: { slug: st
           )}
 
           {/* Categories */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Categories</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2">
-                {brand.categories.map((cat) => (
-                  <Link
-                    key={cat.id}
-                    href={`/directory/categories/${cat.slug}`}
-                    className="block p-2 rounded border hover:bg-muted transition-colors"
-                  >
-                    <div className="font-medium">{cat.name}</div>
-                  </Link>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+          {brand.categories && brand.categories.length > 0 && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Categories</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2">
+                  {brand.categories.map((cat) => (
+                    <Link
+                      key={cat.id}
+                      href={`/directory/categories/${cat.slug}`}
+                      className="block p-2 rounded border hover:bg-muted transition-colors"
+                    >
+                      <div className="font-medium">{cat.name}</div>
+                    </Link>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
         </div>
       </div>
     </div>

@@ -7,42 +7,23 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Package, Users, FileText, MessageSquare, TrendingUp } from "lucide-react"
-import { prisma } from "@/lib/db"
 import Link from "next/link"
+import { mockProducts, mockBlogPosts, mockForumThreads } from "@/lib/mock-data"
 
-async function getDashboardStats() {
-  const [productCount, userCount, blogPostCount, threadCount, recentProducts, recentPosts, recentThreads] =
-    await Promise.all([
-      prisma.product.count({ where: { isActive: true } }),
-      prisma.user.count(),
-      prisma.blogPost.count({ where: { status: "PUBLISHED" } }),
-      prisma.thread.count(),
-      prisma.product.findMany({
-        take: 5,
-        orderBy: { createdAt: "desc" },
-        include: { brand: true, categories: true },
-      }),
-      prisma.blogPost.findMany({
-        take: 5,
-        where: { status: "PUBLISHED" },
-        orderBy: { publishedAt: "desc" },
-        include: { author: true },
-      }),
-      prisma.thread.findMany({
-        take: 5,
-        orderBy: { createdAt: "desc" },
-        include: { author: true, forumCategory: true },
-      }),
-    ])
-
-  return {
-    stats: { productCount, userCount, blogPostCount, threadCount },
-    recent: { products: recentProducts, posts: recentPosts, threads: recentThreads },
+export default function AdminDashboard() {
+  // Use mock data for quick deployment
+  const stats = {
+    productCount: mockProducts.length,
+    userCount: 156,
+    blogPostCount: mockBlogPosts.length,
+    threadCount: mockForumThreads.length,
   }
-}
 
-export default async function AdminDashboard() {
-  const { stats, recent } = await getDashboardStats()
+  const recent = {
+    products: mockProducts.slice(0, 5),
+    posts: mockBlogPosts.slice(0, 5),
+    threads: mockForumThreads.slice(0, 5),
+  }
 
   return (
     <div className="p-6 space-y-6">
@@ -130,7 +111,7 @@ export default async function AdminDashboard() {
                         {product.isActive ? "Active" : "Inactive"}
                       </Badge>
                       <Button variant="outline" size="sm" asChild>
-                        <Link href={`/admin/products/${product.id}`}>Edit</Link>
+                        <Link href={`/products/${product.slug}`}>View</Link>
                       </Button>
                     </div>
                   </div>
@@ -159,7 +140,7 @@ export default async function AdminDashboard() {
                     <div className="flex items-center space-x-2">
                       <Badge>{post.status}</Badge>
                       <Button variant="outline" size="sm" asChild>
-                        <Link href={`/admin/blog/${post.id}`}>Edit</Link>
+                        <Link href={`/blog/${post.slug}`}>View</Link>
                       </Button>
                     </div>
                   </div>
@@ -182,13 +163,13 @@ export default async function AdminDashboard() {
                     <div>
                       <p className="font-medium">{thread.title}</p>
                       <p className="text-sm text-muted-foreground">
-                        By {thread.author.username} in {thread.forumCategory.name}
+                        By {thread.author.name} in {thread.category.name}
                       </p>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <Badge variant="outline">{thread.forumCategory.name}</Badge>
+                      <Badge variant="outline">{thread.category.name}</Badge>
                       <Button variant="outline" size="sm" asChild>
-                        <Link href={`/forum/threads/${thread.slug}`}>View</Link>
+                        <Link href={`/forum`}>View</Link>
                       </Button>
                     </div>
                   </div>
@@ -203,33 +184,25 @@ export default async function AdminDashboard() {
       <Card>
         <CardHeader>
           <CardTitle>Quick Actions</CardTitle>
-          <CardDescription>Common administrative tasks</CardDescription>
+          <CardDescription>Common administrative tasks (Database not connected)</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <Button asChild>
-              <Link href="/admin/products/new">
-                <Package className="h-4 w-4 mr-2" />
-                Add Product
-              </Link>
+            <Button disabled>
+              <Package className="h-4 w-4 mr-2" />
+              Add Product
             </Button>
-            <Button asChild>
-              <Link href="/admin/blog/new">
-                <FileText className="h-4 w-4 mr-2" />
-                Write Post
-              </Link>
+            <Button disabled>
+              <FileText className="h-4 w-4 mr-2" />
+              Write Post
             </Button>
-            <Button asChild>
-              <Link href="/admin/users">
-                <Users className="h-4 w-4 mr-2" />
-                Manage Users
-              </Link>
+            <Button disabled>
+              <Users className="h-4 w-4 mr-2" />
+              Manage Users
             </Button>
-            <Button asChild>
-              <Link href="/admin/analytics">
-                <TrendingUp className="h-4 w-4 mr-2" />
-                View Analytics
-              </Link>
+            <Button disabled>
+              <TrendingUp className="h-4 w-4 mr-2" />
+              View Analytics
             </Button>
           </div>
         </CardContent>

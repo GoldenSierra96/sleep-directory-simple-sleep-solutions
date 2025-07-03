@@ -1,31 +1,14 @@
-import { type NextRequest, NextResponse } from "next/server"
-import { prisma } from "@/lib/db"
+export const dynamic = "force-dynamic"
+
+import { NextRequest, NextResponse } from "next/server"
+import { mockProducts } from "@/lib/mock-data"
 
 export async function GET(request: NextRequest, { params }: { params: { slug: string } }) {
-  try {
-    const product = await prisma.product.findUnique({
-      where: { slug: params.slug },
-      include: {
-        brand: true,
-        categories: true,
-        reviews: {
-          include: {
-            author: true,
-          },
-          orderBy: {
-            createdAt: "desc",
-          },
-        },
-      },
-    })
+  const product = mockProducts.find(p => p.slug === params.slug)
 
-    if (!product) {
-      return NextResponse.json({ success: false, message: "Product not found" }, { status: 404 })
-    }
-
-    return NextResponse.json({ data: product, success: true })
-  } catch (error) {
-    console.error("Error fetching product:", error)
-    return NextResponse.json({ success: false, message: "Failed to fetch product" }, { status: 500 })
+  if (!product) {
+    return NextResponse.json({ error: "Product not found" }, { status: 404 })
   }
+
+  return NextResponse.json({ product })
 }

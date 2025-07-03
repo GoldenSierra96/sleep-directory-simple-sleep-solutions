@@ -1,61 +1,48 @@
-import { type NextRequest, NextResponse } from "next/server"
-import { prisma } from "@/lib/db"
+export const dynamic = "force-dynamic"
 
-export async function GET(request: NextRequest) {
+import { NextRequest, NextResponse } from "next/server"
+import { mockForumThreads } from "@/lib/mock-data"
+
+export async function GET(request?: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url)
+    // Default values for static generation
+    let page = 1
+    let limit = 10
+    let category = null
 
-    const page = Number.parseInt(searchParams.get("page") || "1")
-    const limit = Number.parseInt(searchParams.get("limit") || "20")
-    const categorySlug = searchParams.get("category")
-
-    const where: any = {}
-
-    if (categorySlug) {
-      where.forumCategory = {
-        slug: categorySlug,
-      }
+    // Only parse URL if request is available (not during static generation)
+    if (request && request.url) {
+      const url = new URL(request.url)
+      page = parseInt(url.searchParams.get("page") || "1")
+      limit = parseInt(url.searchParams.get("limit") || "10")
+      category = url.searchParams.get("category")
     }
 
-    const total = await prisma.thread.count({ where })
+    // Filter mock threads
+    let filteredThreads = mockForumThreads
 
-    const threads = await prisma.thread.findMany({
-      where,
-      include: {
-        author: true,
-        forumCategory: true,
-        posts: {
-          include: {
-            author: true,
-          },
-          take: 1,
-          orderBy: {
-            createdAt: "desc",
-          },
-        },
-        _count: {
-          select: {
-            posts: true,
-          },
-        },
-      },
-      orderBy: [{ isPinned: "desc" }, { lastActivityAt: "desc" }],
-      skip: (page - 1) * limit,
-      take: limit,
-    })
+    if (category) {
+      filteredThreads = filteredThreads.filter(thread => 
+        thread.category.slug === category
+      )
+    }
+
+    // Pagination
+    const startIndex = (page - 1) * limit
+    const endIndex = startIndex + limit
+    const paginatedThreads = filteredThreads.slice(startIndex, endIndex)
 
     return NextResponse.json({
-      data: threads,
+      threads: paginatedThreads,
       pagination: {
         page,
         limit,
-        total,
-        totalPages: Math.ceil(total / limit),
+        total: filteredThreads.length,
+        totalPages: Math.ceil(filteredThreads.length / limit),
       },
-      success: true,
     })
   } catch (error) {
-    console.error("Error fetching threads:", error)
-    return NextResponse.json({ success: false, message: "Failed to fetch threads" }, { status: 500 })
+    console.error('Forum threads API error:', error)
+    return NextResponse.json({ threads: [], pagination: { page: 1, limit: 10, total: 0, totalPages: 0 } })
   }
 }

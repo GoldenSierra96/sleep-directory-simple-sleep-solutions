@@ -2,22 +2,21 @@
 
 export const dynamic = "force-dynamic"
 
-import { prisma } from "@/lib/db";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { mockBrands, mockCategories } from "@/lib/mock-data";
 
-export default async function BrandsPage() {
-  const brands = await prisma.brand.findMany({
-    include: { categories: true },
-    orderBy: { featured: "desc" },
+export default function BrandsPage() {
+  // Sort brands with featured first
+  const brands = [...mockBrands].sort((a, b) => {
+    if (a.featured && !b.featured) return -1;
+    if (!a.featured && b.featured) return 1;
+    return 0;
   });
-  const categories = await prisma.category.findMany({ orderBy: { name: "asc" } });
-
-  // For now, filtering/search is handled client-side (can be moved to server if needed)
-  // This is a static scaffold; you can enhance with client interactivity later
+  
+  const categories = mockCategories;
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -51,7 +50,7 @@ export default async function BrandsPage() {
                   {brand.featured && <Badge className="ml-2">Featured</Badge>}
                 </CardTitle>
                 <div className="flex flex-wrap gap-1 mb-1">
-                  {brand.categories.map((cat) => (
+                  {brand.categories?.map((cat) => (
                     <Badge key={cat.id} variant="outline" className="text-xs">
                       {cat.name}
                     </Badge>

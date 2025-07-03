@@ -4,9 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "prisma generate && next build",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "postinstall": "prisma generate || echo 'Prisma generation skipped'",
     "import-brands": "ts-node --require tsconfig-paths/register scripts/importBrandDataPrisma.ts",
     "db:seed": "npx prisma db seed"
   },

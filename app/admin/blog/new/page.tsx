@@ -11,71 +11,17 @@ async function getFormData() {
   return { categories, tags }
 }
 
-export default async function NewBlogPostPage() {
-  const { categories, tags } = await getFormData()
+export const dynamic = "force-dynamic"
 
-  const handleSave = async (data: any) => {
-    "use server"
-
-    const post = await prisma.blogPost.create({
-      data: {
-        title: data.title,
-        slug: data.slug,
-        excerpt: data.excerpt,
-        body: data.body,
-        featuredImage: data.featuredImage,
-        status: data.status,
-        publishedAt: data.publishedAt,
-        authorId: "user-id", // Get from session
-        categories: {
-          connect: data.categoryIds.map((id: string) => ({ id })),
-        },
-        tags: {
-          connect: data.tagIds.map((id: string) => ({ id })),
-        },
-      },
-    })
-
-    redirect(`/admin/blog/${post.id}/edit`)
-  }
-
-  const handlePublish = async (data: any) => {
-    "use server"
-
-    const post = await prisma.blogPost.create({
-      data: {
-        title: data.title,
-        slug: data.slug,
-        excerpt: data.excerpt,
-        body: data.body,
-        featuredImage: data.featuredImage,
-        status: "PUBLISHED",
-        publishedAt: data.publishedAt || new Date(),
-        authorId: "user-id", // Get from session
-        categories: {
-          connect: data.categoryIds.map((id: string) => ({ id })),
-        },
-        tags: {
-          connect: data.tagIds.map((id: string) => ({ id })),
-        },
-      },
-    })
-
-    redirect(`/blog/${post.slug}`)
-  }
-
-  const handlePreview = (data: any) => {
-    // Store in session/temp storage for preview
-    console.log("Preview:", data)
-  }
-
+export default function NewBlogPostPage() {
   return (
-    <BlogPostForm
-      categories={categories}
-      tags={tags}
-      onSave={handleSave}
-      onPublish={handlePublish}
-      onPreview={handlePreview}
-    />
+    <div className="p-6">
+      <h1 className="text-2xl font-bold mb-4">Create New Blog Post</h1>
+      <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+        <p className="text-sm text-yellow-800">
+          Blog post creation feature will be available after database setup is complete.
+        </p>
+      </div>
+    </div>
   )
 }

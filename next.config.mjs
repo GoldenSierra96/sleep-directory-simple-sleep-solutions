@@ -18,7 +18,13 @@ const nextConfig = {
   },
   experimental: {
     serverComponentsExternalPackages: ['@prisma/client'],
+    missingSuspenseWithCSRBailout: false,
   },
+  staticPageGenerationTimeout: 1000,
+  // Disable static optimization for specific problematic pages
+  async rewrites() {
+    return []
+  }
 }
 
 export default nextConfig

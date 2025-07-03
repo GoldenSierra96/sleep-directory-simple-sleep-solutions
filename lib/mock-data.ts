@@ -25,6 +25,17 @@ export interface Brand {
   logo?: string
   description?: string
   websiteUrl?: string
+  featured?: boolean
+  isOnline?: boolean
+  categories?: Category[]
+  tags?: string[]
+  socialLinks?: {
+    facebook?: string
+    instagram?: string
+    tiktok?: string
+  }
+  locations?: string[]
+  productGallery?: string[]
 }
 
 export interface Category {
@@ -107,27 +118,155 @@ export interface ForumPost {
 export const mockBrands: Brand[] = [
   {
     id: "1",
-    name: "Purple",
-    slug: "purple",
+    name: "Emma Sleep",
+    slug: "emma-sleep",
     logo: "/placeholder.svg?height=40&width=120",
-    description: "Innovative gel grid technology for better sleep",
-    websiteUrl: "https://purple.com",
+    description: "Award-winning memory foam mattresses with 200-night trial. Emma Sleep has revolutionized the sleep industry with their innovative approach to mattress design, combining comfort, support, and temperature regulation in one perfect package.",
+    websiteUrl: "https://emma-sleep.com",
+    featured: true,
+    isOnline: true,
+    categories: [{ id: "1", name: "Mattresses", slug: "mattresses" }],
+    tags: ["Memory Foam", "200-Night Trial", "Free Delivery", "Award-Winning", "Temperature Regulation"],
+    socialLinks: {
+      facebook: "https://facebook.com/emmasleep",
+      instagram: "https://instagram.com/emmasleep",
+    },
+    productGallery: [
+      "/placeholder.svg?height=200&width=300",
+      "/placeholder.svg?height=200&width=300",
+      "/placeholder.svg?height=200&width=300",
+      "/placeholder.svg?height=200&width=300",
+      "/placeholder.svg?height=200&width=300",
+    ],
   },
   {
     id: "2",
-    name: "Tempur-Pedic",
-    slug: "tempur-pedic",
+    name: "Simba Sleep",
+    slug: "simba-sleep", 
     logo: "/placeholder.svg?height=40&width=120",
-    description: "Memory foam mattresses and sleep accessories",
-    websiteUrl: "https://tempurpedic.com",
+    description: "Hybrid mattresses with pocket springs and cooling foam. Simba Sleep combines the best of memory foam and pocket springs to create the perfect balance of comfort and support for every sleep position.",
+    websiteUrl: "https://simbasleep.com",
+    featured: true,
+    isOnline: true,
+    categories: [{ id: "1", name: "Mattresses", slug: "mattresses" }],
+    tags: ["Hybrid Technology", "Pocket Springs", "Cooling", "British Made", "100-Night Trial"],
+    socialLinks: {
+      facebook: "https://facebook.com/simbasleep",
+      instagram: "https://instagram.com/simbasleep",
+      tiktok: "https://tiktok.com/@simbasleep",
+    },
+    productGallery: [
+      "/placeholder.svg?height=200&width=300",
+      "/placeholder.svg?height=200&width=300",
+      "/placeholder.svg?height=200&width=300",
+    ],
   },
   {
     id: "3",
     name: "Casper",
     slug: "casper",
     logo: "/placeholder.svg?height=40&width=120",
-    description: "Direct-to-consumer sleep products",
+    description: "Direct-to-consumer sleep products with zoned support. Casper pioneered the bed-in-a-box revolution and continues to innovate with zoned technology and premium materials.",
     websiteUrl: "https://casper.com",
+    featured: true,
+    isOnline: true,
+    categories: [{ id: "1", name: "Mattresses", slug: "mattresses" }, { id: "2", name: "Pillows", slug: "pillows" }],
+    tags: ["Zoned Support", "Direct-to-Consumer", "Premium Materials", "Sleep Accessories"],
+    socialLinks: {
+      facebook: "https://facebook.com/casper",
+      instagram: "https://instagram.com/casper",
+    },
+    productGallery: [
+      "/placeholder.svg?height=200&width=300",
+      "/placeholder.svg?height=200&width=300",
+      "/placeholder.svg?height=200&width=300",
+      "/placeholder.svg?height=200&width=300",
+    ],
+  },
+  {
+    id: "4",
+    name: "Purple",
+    slug: "purple",
+    logo: "/placeholder.svg?height=40&width=120",
+    description: "Innovative gel grid technology for cooling sleep",
+    websiteUrl: "https://purple.com",
+    featured: true,
+    isOnline: true,
+    categories: [{ id: "1", name: "Mattresses", slug: "mattresses" }, { id: "2", name: "Pillows", slug: "pillows" }],
+    tags: ["Gel Grid Technology", "Cooling", "Innovative"],
+  },
+  {
+    id: "5",
+    name: "Tempur-Pedic",
+    slug: "tempur-pedic",
+    logo: "/placeholder.svg?height=40&width=120",
+    description: "NASA-developed memory foam for personalized comfort",
+    websiteUrl: "https://tempurpedic.com",
+    featured: true,
+    isOnline: true,
+    categories: [{ id: "1", name: "Mattresses", slug: "mattresses" }, { id: "2", name: "Pillows", slug: "pillows" }],
+    tags: ["NASA Technology", "Memory Foam", "Personalized Comfort"],
+  },
+  {
+    id: "6",
+    name: "Eve Sleep",
+    slug: "eve-sleep",
+    logo: "/placeholder.svg?height=40&width=120",
+    description: "Premium foam mattresses with eco-friendly materials",
+    websiteUrl: "https://evesleep.com",
+    featured: false,
+    isOnline: true,
+    categories: [{ id: "1", name: "Mattresses", slug: "mattresses" }],
+    tags: ["Eco-Friendly", "Premium Foam", "Sustainable"],
+  },
+  {
+    id: "7",
+    name: "Nectar Sleep",
+    slug: "nectar-sleep",
+    logo: "/placeholder.svg?height=40&width=120",
+    description: "Memory foam with cooling cover and lifetime warranty",
+    websiteUrl: "https://nectarsleep.com",
+    featured: false,
+    isOnline: true,
+    categories: [{ id: "1", name: "Mattresses", slug: "mattresses" }],
+    tags: ["Lifetime Warranty", "Cooling Cover", "Memory Foam"],
+  },
+  {
+    id: "8",
+    name: "Otty Sleep",
+    slug: "otty-sleep",
+    logo: "/placeholder.svg?height=40&width=120",
+    description: "British-made hybrid mattresses with cooling technology",
+    websiteUrl: "https://ottysleep.com",
+    featured: false,
+    isOnline: true,
+    categories: [{ id: "1", name: "Mattresses", slug: "mattresses" }],
+    tags: ["British Made", "Hybrid", "Cooling Technology"],
+  },
+  {
+    id: "9",
+    name: "Brook + Wilde",
+    slug: "brook-wilde",
+    logo: "/placeholder.svg?height=40&width=120",
+    description: "Luxury British mattresses with premium natural materials",
+    websiteUrl: "https://brookandwilde.com",
+    featured: false,
+    isOnline: true,
+    categories: [{ id: "1", name: "Mattresses", slug: "mattresses" }],
+    tags: ["Luxury", "Natural Materials", "British Craftsmanship"],
+  },
+  {
+    id: "10",
+    name: "Hypnos",
+    slug: "hypnos",
+    logo: "/placeholder.svg?height=40&width=120",
+    description: "Royal Warrant holders crafting luxury handmade beds",
+    websiteUrl: "https://hypnosbeds.com",
+    featured: false,
+    isOnline: false,
+    categories: [{ id: "1", name: "Mattresses", slug: "mattresses" }, { id: "3", name: "Bedding", slug: "bedding" }],
+    tags: ["Royal Warrant", "Luxury", "Handmade", "Heritage"],
+    locations: ["London", "Manchester", "Edinburgh", "Birmingham", "Bristol"],
   },
 ]
 
@@ -136,25 +275,55 @@ export const mockCategories: Category[] = [
     id: "1",
     name: "Mattresses",
     slug: "mattresses",
-    description: "Memory foam, hybrid, and innerspring mattresses",
+    description: "Memory foam, hybrid, innerspring, and latex mattresses for perfect spinal alignment and comfort",
   },
   {
     id: "2",
     name: "Pillows",
     slug: "pillows",
-    description: "Memory foam, down, and specialty pillows",
+    description: "Memory foam, down, latex, and specialty pillows for optimal neck and head support",
   },
   {
     id: "3",
     name: "Bedding",
     slug: "bedding",
-    description: "Sheets, comforters, and bed accessories",
+    description: "Premium sheets, comforters, duvets, and blankets for ultimate comfort and temperature control",
   },
   {
     id: "4",
     name: "Sleep Masks",
     slug: "sleep-masks",
-    description: "Eye masks and sleep accessories",
+    description: "Blackout masks and light-blocking solutions for deeper, uninterrupted sleep",
+  },
+  {
+    id: "5",
+    name: "Sleep Aids",
+    slug: "sleep-aids",
+    description: "Sound machines, white noise generators, and audio solutions for peaceful sleep",
+  },
+  {
+    id: "6",
+    name: "Supplements",
+    slug: "supplements",
+    description: "Natural melatonin, magnesium, and herbal supplements for better sleep quality",
+  },
+  {
+    id: "7",
+    name: "Sleep Tracking",
+    slug: "sleep-tracking",
+    description: "Wearables and devices to monitor and optimize your sleep patterns and quality",
+  },
+  {
+    id: "8",
+    name: "Sleepwear",
+    slug: "sleepwear",
+    description: "Comfortable pajamas and loungewear designed for optimal sleep temperature and comfort",
+  },
+  {
+    id: "9",
+    name: "Travel Sleep",
+    slug: "travel-sleep",
+    description: "Portable sleep solutions including travel pillows and compact sleep aids for better rest on-the-go",
   },
 ]
 

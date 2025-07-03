@@ -1,94 +1,65 @@
-import { type NextRequest, NextResponse } from "next/server"
-import { prisma } from "@/lib/db"
-import type { BlogFilters, PaginatedResponse, BlogPostWithRelations } from "@/lib/types"
+export const dynamic = "force-dynamic"
 
-export async function GET(request: NextRequest) {
+import { NextRequest, NextResponse } from "next/server"
+import { mockBlogPosts } from "@/lib/mock-data"
+
+export async function GET(request?: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url)
+    // Default values for static generation
+    let page = 1
+    let limit = 10
+    let search = ""
+    let category = null
+    let tag = null
 
-    const page = Number.parseInt(searchParams.get("page") || "1")
-    const limit = Number.parseInt(searchParams.get("limit") || "10")
-    const sortBy = searchParams.get("sortBy") || "publishedAt"
-    const sortOrder = searchParams.get("sortOrder") || "desc"
-
-    const filters: BlogFilters = {
-      categories: searchParams.get("categories")?.split(",").filter(Boolean),
-      tags: searchParams.get("tags")?.split(",").filter(Boolean),
-      author: searchParams.get("author") || undefined,
-      search: searchParams.get("search") || undefined,
+    // Only parse URL if request is available (not during static generation)
+    if (request && request.url) {
+      const url = new URL(request.url)
+      page = parseInt(url.searchParams.get("page") || "1")
+      limit = parseInt(url.searchParams.get("limit") || "10")
+      search = url.searchParams.get("search") || ""
+      category = url.searchParams.get("category")
+      tag = url.searchParams.get("tag")
     }
 
-    const where: any = {
-      status: "PUBLISHED",
-      publishedAt: {
-        lte: new Date(),
-      },
+    // Filter mock posts
+    let filteredPosts = mockBlogPosts.filter(post => post.status === "PUBLISHED")
+
+    if (search) {
+      filteredPosts = filteredPosts.filter(post => 
+        post.title.toLowerCase().includes(search.toLowerCase()) ||
+        post.excerpt.toLowerCase().includes(search.toLowerCase())
+      )
     }
 
-    if (filters.categories?.length) {
-      where.categories = {
-        some: {
-          slug: {
-            in: filters.categories,
-          },
-        },
-      }
+    if (category) {
+      filteredPosts = filteredPosts.filter(post => 
+        post.categories.some(cat => cat.slug === category)
+      )
     }
 
-    if (filters.tags?.length) {
-      where.tags = {
-        some: {
-          slug: {
-            in: filters.tags,
-          },
-        },
-      }
+    if (tag) {
+      filteredPosts = filteredPosts.filter(post => 
+        post.tags.some(t => t.slug === tag)
+      )
     }
 
-    if (filters.author) {
-      where.author = {
-        username: filters.author,
-      }
-    }
+    // Pagination
+    const startIndex = (page - 1) * limit
+    const endIndex = startIndex + limit
+    const paginatedPosts = filteredPosts.slice(startIndex, endIndex)
 
-    if (filters.search) {
-      where.OR = [
-        { title: { contains: filters.search, mode: "insensitive" } },
-        { excerpt: { contains: filters.search, mode: "insensitive" } },
-        { body: { contains: filters.search, mode: "insensitive" } },
-      ]
-    }
-
-    const total = await prisma.blogPost.count({ where })
-
-    const posts = await prisma.blogPost.findMany({
-      where,
-      include: {
-        author: true,
-        categories: true,
-        tags: true,
-      },
-      orderBy: {
-        [sortBy]: sortOrder,
-      },
-      skip: (page - 1) * limit,
-      take: limit,
-    })
-
-    const response: PaginatedResponse<BlogPostWithRelations> = {
-      data: posts,
+    return NextResponse.json({
+      posts: paginatedPosts,
       pagination: {
         page,
         limit,
-        total,
-        totalPages: Math.ceil(total / limit),
+        total: filteredPosts.length,
+        totalPages: Math.ceil(filteredPosts.length / limit),
       },
-      success: true,
-    }
-
-    return NextResponse.json(response)
+    })
   } catch (error) {
-    console.error("Error fetching blog posts:", error)
-    return NextResponse.json({ success: false, message: "Failed to fetch blog posts" }, { status: 500 })
+    console.error('Blog posts API error:', error)
+    return NextResponse.json({ posts: [], pagination: { page: 1, limit: 10, total: 0, totalPages: 0 } })
   }
 }

@@ -1,23 +1,16 @@
+export const dynamic = "force-static"
+
 import { NextResponse } from "next/server"
-import { prisma } from "@/lib/db"
+import { mockProducts, mockBlogPosts, mockCategories, mockBrands } from "@/lib/mock-data"
 
 export async function GET() {
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://sleepdirectory.com"
 
-  // Get all products, blog posts, and categories
-  const [products, blogPosts, categories] = await Promise.all([
-    prisma.product.findMany({
-      where: { isActive: true },
-      select: { slug: true, updatedAt: true },
-    }),
-    prisma.blogPost.findMany({
-      where: { status: "PUBLISHED" },
-      select: { slug: true, updatedAt: true },
-    }),
-    prisma.category.findMany({
-      select: { slug: true, updatedAt: true },
-    }),
-  ])
+  // Use mock data for quick deployment
+  const products = mockProducts.map(p => ({ slug: p.slug, updatedAt: p.updatedAt }))
+  const blogPosts = mockBlogPosts.map(p => ({ slug: p.slug, updatedAt: p.updatedAt }))
+  const categories = mockCategories.map(c => ({ slug: c.slug, updatedAt: new Date().toISOString() }))
+  const brands = mockBrands.map(b => ({ slug: b.slug, updatedAt: new Date().toISOString() }))
 
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -26,6 +19,18 @@ export async function GET() {
     <lastmod>${new Date().toISOString()}</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>${baseUrl}/brands</loc>
+    <lastmod>${new Date().toISOString()}</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>${baseUrl}/directory</loc>
+    <lastmod>${new Date().toISOString()}</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
   </url>
   <url>
     <loc>${baseUrl}/products</loc>
@@ -45,12 +50,23 @@ export async function GET() {
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
+  ${brands
+    .map(
+      (brand) => `
+  <url>
+    <loc>${baseUrl}/brands/${brand.slug}</loc>
+    <lastmod>${brand.updatedAt}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>`,
+    )
+    .join("")}
   ${products
     .map(
       (product) => `
   <url>
     <loc>${baseUrl}/products/${product.slug}</loc>
-    <lastmod>${product.updatedAt.toISOString()}</lastmod>
+    <lastmod>${product.updatedAt}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>`,
@@ -61,7 +77,7 @@ export async function GET() {
       (post) => `
   <url>
     <loc>${baseUrl}/blog/${post.slug}</loc>
-    <lastmod>${post.updatedAt.toISOString()}</lastmod>
+    <lastmod>${post.updatedAt}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>`,
@@ -71,8 +87,8 @@ export async function GET() {
     .map(
       (category) => `
   <url>
-    <loc>${baseUrl}/products?categories=${category.slug}</loc>
-    <lastmod>${category.updatedAt.toISOString()}</lastmod>
+    <loc>${baseUrl}/directory/categories/${category.slug}</loc>
+    <lastmod>${category.updatedAt}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>`,
